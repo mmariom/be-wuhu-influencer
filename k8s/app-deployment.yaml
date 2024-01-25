@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: mmatejovic/wiapi:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_TYPE
+          value: postgres
+        - name: HOST
+          value: "db-postgresql-fra1-59989-do-user-15476205-0.c.db.ondigitalocean.com"
+        - name: PORT
+          value: "25060"
+        - name: USERNAME
+          value: "doadmin"
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: password
+        - name: DATABASE
+          value: "defaultdb"
+        # Add other environment variables as needed
