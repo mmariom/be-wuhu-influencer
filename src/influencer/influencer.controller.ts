@@ -18,6 +18,7 @@ import { InfluencerService } from './influencer.service';
 import { RegisterInfluencerDto } from './dto/register-influencer.dto';
 import { PhoneNumberAvailabilityDto } from './dto/phone-number-availability.dto';
 import { EmailAvailabilityDto } from './dto/email-availability.dto';
+import { GetInfluencer } from 'src/common/decorators/get-influencer.decorator';
 
 
 
@@ -46,14 +47,16 @@ export class InfluencerController {
 
   @UseGuards(JwtGuard)
   @Get('/protected')
-  protected() {
+  protected(@GetInfluencer('id') influencerId: string ) {
     console.log("protected route")
+    console.log(influencerId)
     return  "protected route"
   }
 
   @Post()
   registerInfluencer(@Body() registerInfluencerDto: RegisterInfluencerDto) {
     //try catch block handle exception 
+   
     return this.influencerService.registerInfluencer(registerInfluencerDto);
   }
 
@@ -78,28 +81,28 @@ export class InfluencerController {
   //   return this.influencerService.findUserComments(id);
   // }
 
-  @Post('/exchange-token')
-  async exchangeToken(@Body('code') code: string, @Res() response) {
-    // console.log("exchange toke n called" + code)
-    try {
-      const tokenData = await this.influencerService.exchangeCodeForToken(code);
-      response.json(tokenData);
-    } catch (error) {
-      response.status(500).json({ message: error.message });
-    }
-  }
+  // @Post('/exchange-token')
+  // async exchangeToken(@Body('code') code: string, @Res() response) {
+  //   // console.log("exchange toke n called" + code)
+  //   try {
+  //     const tokenData = await this.influencerService.exchangeCodeForToken(code);
+  //     response.json(tokenData);
+  //   } catch (error) {
+  //     response.status(500).json({ message: error.message });
+  //   }
+  // }
 
 
 
-  @Get('/profile')
-  async getProfile(@Query('token') token: string) {
-    return this.influencerService.fetchUserProfile(token);
-  }
+  // @Get('/profile')
+  // async getProfile(@Query('token') token: string) {
+  //   return this.influencerService.fetchUserProfile(token);
+  // }
 
 
-  @Get('/test')
-  async test() {
-    // return that text in json format 
-    return  {name: "jozko", age: 12}
-      }
+  // @Get('/test')
+  // async test() {
+  //   // return that text in json format 
+  //   return  {name: "jozko", age: 12}
+  //     }
 }

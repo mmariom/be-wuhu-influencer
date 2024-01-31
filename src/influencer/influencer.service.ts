@@ -9,15 +9,14 @@ import { UpdateInfluencerDto } from './dto/update-influencer.dto';
 import { RegisterInfluencerDto } from './dto/register-influencer.dto';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { InfluencerAddress } from 'src/influencer-address/entities/influencer-address.entity/influencer-address.entity';
-import { InfluencerCompany } from 'src/influencer-company/entities/influencer-company.entity/influencer-company.entity';
+import { InfluencerCompany } from 'src/influencer-company/entities/influencer-company.entity';
 
 @Injectable()
 export class InfluencerService {
   constructor(
     @InjectRepository(Influencer) private readonly influencerRepo: Repository<Influencer>, 
     @InjectRepository(InfluencerCompany) private readonly influencerCompanyRepo: Repository<InfluencerCompany>,
-    private httpService: HttpService, private configService: ConfigService
+
   ) {}
   async findOneById(id: string) {
     return await this.influencerRepo.findOne({ where: {id : id} });
@@ -110,33 +109,33 @@ async update(id: number, updateInfluencerDto: UpdateInfluencerDto) {
 }
 
   //Instagram token exchange
-  async exchangeCodeForToken(code: string): Promise<any> {
-    const tokenExchangeUrl = 'https://api.instagram.com/oauth/access_token';
-    const payload = new URLSearchParams({
-      client_id: "700239725631538",
-      client_secret: "ad8a79525293aac0aeafbe8bfc7609a8",
-      grant_type: 'authorization_code',
-      redirect_uri: "https://2334-217-119-126-7.ngrok-free.app/callback",
-      code,
-    });
+  // async exchangeCodeForToken(code: string): Promise<any> {
+  //   const tokenExchangeUrl = 'https://api.instagram.com/oauth/access_token';
+  //   const payload = new URLSearchParams({
+  //     client_id: "700239725631538",
+  //     client_secret: "ad8a79525293aac0aeafbe8bfc7609a8",
+  //     grant_type: 'authorization_code',
+  //     redirect_uri: "https://2334-217-119-126-7.ngrok-free.app/callback",
+  //     code,
+  //   });
 
-    try {
-      const response = await this.httpService.post(tokenExchangeUrl, payload).toPromise();
-      return response.data;
-    } catch (error) {
-      // Handle errors appropriately
-      throw new Error('Error exchanging code for token');
-    }
-  }
+  //   try {
+  //     const response = await this.httpService.post(tokenExchangeUrl, payload).toPromise();
+  //     return response.data;
+  //   } catch (error) {
+  //     // Handle errors appropriately
+  //     throw new Error('Error exchanging code for token');
+  //   }
+  // }
 
-  async fetchUserProfile(access_token: string): Promise<any> {
-    try {
-      const response = await this.httpService.get(`https://graph.instagram.com/me?fields=id,username,account_type&access_token=${access_token}`).toPromise();
-      return response.data;
-    } catch (error) {
-      throw new Error('Error fetching Instagram profile');
-    }
-  }
+  // async fetchUserProfile(access_token: string): Promise<any> {
+  //   try {
+  //     const response = await this.httpService.get(`https://graph.instagram.com/me?fields=id,username,account_type&access_token=${access_token}`).toPromise();
+  //     return response.data;
+  //   } catch (error) {
+  //     throw new Error('Error fetching Instagram profile');
+  //   }
+  // }
 
 
   

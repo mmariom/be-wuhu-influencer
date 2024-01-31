@@ -1,4 +1,4 @@
-import { Body, ConflictException, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, ConflictException, Controller, Get, HttpCode, HttpStatus, InternalServerErrorException, Post, Request, UseGuards } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -29,18 +29,23 @@ export class AuthController {
   }
 
   @Post('register')
-  @HttpCode(HttpStatus.CREATED)
+  // @HttpCode(HttpStatus.CREATED)
     async registerInfleuncer(@Body() registerInfluencerDto: RegisterInfluencerDto) {
 
-      try{
+      try {
         await this.influencerService.registerInfluencer(registerInfluencerDto);
         const registeredInfluencer = await this.influencerService.findOneByEmail(registerInfluencerDto.email);
         return await this.authService.login(registeredInfluencer); 
-      }catch(err){
+      } catch (err) {
         if (err instanceof ConflictException) {
-          return { statusCode: HttpStatus.CONFLICT, message: err.message };
+          throw new ConflictException(err.message);
         }
-        }
+        // For other types of errors, you might want to throw a generic exception or handle them accordingly
+        throw new InternalServerErrorException();
+      }
+      
+
+
     }
 
 

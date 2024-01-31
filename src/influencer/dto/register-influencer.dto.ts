@@ -29,7 +29,7 @@
 
 
 
-import { IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, ValidateNested } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, IsStrongPassword, Matches, MinLength, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { IsBusinessUserHasCompany } from 'src/common/validators/business-user-company.validator';
 
@@ -83,6 +83,13 @@ export class RegisterInfluencerDto {
 
   @IsString()
   @IsNotEmpty()
+  @IsStrongPassword({
+    minLength: 8,
+    minLowercase: 1,
+    minNumbers: 1,
+    minUppercase: 1,
+    minSymbols: 0,
+  })
   password: string;
 
   // Fields for steps 2, 3, and the optional business user step

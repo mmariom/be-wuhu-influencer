@@ -6,6 +6,12 @@ import { AuthModule } from './auth/auth.module';
 import { InfluencerAddressModule } from './influencer-address/influencer-address.module';
 import { InfluencerCompanyModule } from './influencer-company/influencer-company.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { InstagramAccountModule } from './instagram-account/instagram-account.module';
+import { InstagramAccountMetricsModule } from './instagram-account-metrics/instagram-account-metrics.module';
+import { InstagramAccountInterestsModule } from './instagram-account-interests/instagram-account-interests.module';
+import { CommonModule } from './common/common.module';
+import { InstagramProfileModule } from './instagram-profile/instagram-profile.module';
+import { InstagramOffersModule } from './instagram-offer/instagram-offers.module';
 
 // @Module({
   // imports: [ConfigModule.forRoot({isGlobal: true, envFilePath: '.env',}),TypeOrmModule.forRoot(dataSourceOptions), 
@@ -67,6 +73,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     AuthModule,
     InfluencerAddressModule,
     InfluencerCompanyModule,
+    InstagramAccountModule,
+    InstagramAccountMetricsModule,
+    InstagramAccountInterestsModule,
+    InstagramOffersModule,
+    CommonModule,
+    InstagramProfileModule
   ],
   controllers: [AppController],
   providers: [],

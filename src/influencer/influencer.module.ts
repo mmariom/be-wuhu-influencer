@@ -7,11 +7,21 @@ import { HttpModule, HttpService } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { InfluencerCompanyModule } from 'src/influencer-company/influencer-company.module';
 import { InfluencerAddressModule } from 'src/influencer-address/influencer-address.module';
-import { InfluencerCompany } from 'src/influencer-company/entities/influencer-company.entity/influencer-company.entity';
-import { InfluencerAddress } from 'src/influencer-address/entities/influencer-address.entity/influencer-address.entity';
+import { InfluencerCompany } from 'src/influencer-company/entities/influencer-company.entity';
+import { InfluencerAddress } from 'src/influencer-address/entities/influencer-address.entity';
+
+// @Module({
+//   imports: [TypeOrmModule.forFeature([Influencer,InfluencerCompany,InfluencerAddress]),HttpModule,ConfigModule,InfluencerCompanyModule,InfluencerAddressModule],
+//   controllers: [InfluencerController],
+//   providers: [InfluencerService ],
+//   exports: [InfluencerService]
+// })
+// export class InfluencerModule {}
+
+
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Influencer,InfluencerCompany,InfluencerAddress]),HttpModule,ConfigModule,InfluencerCompanyModule,InfluencerAddressModule],
+  imports: [TypeOrmModule.forFeature([Influencer,InfluencerCompany,InfluencerAddress]),InfluencerCompanyModule,InfluencerAddressModule],
   controllers: [InfluencerController],
   providers: [InfluencerService ],
   exports: [InfluencerService]

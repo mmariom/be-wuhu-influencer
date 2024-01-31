@@ -151,6 +151,10 @@ export class AuthService {
       accessToken: this.jwtService.sign(payload, {
         expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRATION', '15m'),
       }),
+
+      refreshToken: this.jwtService.sign({ id: influencer.id }, {
+        expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRATION', '7d'),
+      }),
     };
   }
   

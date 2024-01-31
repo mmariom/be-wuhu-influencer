@@ -21,7 +21,9 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:generate": "npm run build && npm run typeorm -- -d ./db/data-source.ts migration:generate dist/db/migrations/MyMigration",
     "migration:run": "npm run typeorm -- -d ./db/data-source.ts migration:run",
-    "migration:create": "npm run typeorm -- -d ./db/data-source.ts migration:create db/migrations/createdMigration"
+    "migration:create": "npm run typeorm -- -d ./db/data-source.ts migration:create db/migrations/createdMigration",
+    "generate:graph": "madge --image graph.png --extensions ts src"
+
   }
   ,
   "dependencies": {

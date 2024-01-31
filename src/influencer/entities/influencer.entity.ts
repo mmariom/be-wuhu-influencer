@@ -10,14 +10,15 @@ import {
     PrimaryGeneratedColumn,
   } from 'typeorm';
   import * as bcrypt from 'bcrypt';
-import { BaseEntityCommon } from 'src/common/entity/base.entity';
-import { InfluencerAddress } from 'src/influencer-address/entities/influencer-address.entity/influencer-address.entity';
-import { InfluencerCompany } from 'src/influencer-company/entities/influencer-company.entity/influencer-company.entity';
+import { BaseEntityCommonUUID } from 'src/common/entity/base-uuid.entity';
+import { InfluencerCompany } from 'src/influencer-company/entities/influencer-company.entity';
 import { IsPhoneNumber } from 'class-validator';
+import { InstagramAccount } from 'src/instagram-account/entities/instagram-account.entity';
+import { InfluencerAddress } from 'src/influencer-address/entities/influencer-address.entity';
 
 
   @Entity()
-  export class Influencer extends BaseEntityCommon{
+  export class Influencer extends BaseEntityCommonUUID{
 
     
   
@@ -47,7 +48,12 @@ import { IsPhoneNumber } from 'class-validator';
     isBusinessUser: boolean;
 
 
-    //TODO: add the DOB field
+    // @OneToMany(() => InstagramAccount, instagramAccount => instagramAccount.influencer)
+    // instagramAccounts: InstagramAccount[];
+
+    @OneToOne(() => InstagramAccount, instagramAccount => instagramAccount.influencer, { eager: true, cascade: true })
+    @JoinColumn()
+    instagramAccount: InstagramAccount;
 
     @OneToOne(() => InfluencerAddress, { eager: true, cascade: true })
     @JoinColumn()
