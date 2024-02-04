@@ -1,4 +1,4 @@
-import { Body, ConflictException, Controller, Get, HttpCode, HttpStatus, InternalServerErrorException, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, ConflictException, Controller, Get, HttpCode, HttpStatus, InternalServerErrorException, Post, Req, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -7,6 +7,7 @@ import { RefreshJwtStrategy } from './strategies/refreshToken.strategy';
 import { InfluencerService } from 'src/influencer/influencer.service';
 import { RegisterInfluencerDto } from 'src/influencer/dto/register-influencer.dto';
 import { Influencer } from 'src/influencer/entities/influencer.entity';
+import { JwtGuard } from './guards/jwt-auth.guard';
 
 @Controller({
   path: 'auth',
@@ -51,9 +52,39 @@ export class AuthController {
 
 
 
-  @UseGuards(RefreshJwtGuard)
+  // @UseGuards(RefreshJwtGuard)
+  // @Post('refresh')
+  // async refrshToken(@Request() req) {
+  //   return this.authService.refreshToken(req.user);
+  // }
   @Post('refresh')
-  async refrshToken(@Request() req) {
-    return this.authService.refreshToken(req.user);
+  @UseGuards(RefreshJwtGuard) // Assuming this guard validates the structure but not the expiry
+  async refreshToken(@Req() req) {
+    console.log("bac refresh endpoint");
+
+    const authHeader = req.headers['authorization'];
+    const bearerToken = authHeader && authHeader.split(' ')[1];
+    if (!bearerToken) {
+      throw new UnauthorizedException('Bearer token not provided.');
+    }
+    return this.authService.refreshToken(bearerToken);
   }
+  
+
+
+
+  @UseGuards(JwtGuard)
+  @Post('logout')
+  async logout(@Request() req) {
+    // Extract user or token information from req.user
+    await this.authService.logout(req.user.id);
+
+    // Additional steps to clear tokens or manage session state
+    return { message: 'Logged out successfully' };
+  }
+
+
+
 }
+
+

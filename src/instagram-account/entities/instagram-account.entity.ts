@@ -99,11 +99,11 @@ export class InstagramAccount extends BaseEntityCommonUUID{
   @JoinTable({
     name: 'ig_accounts_and_interests', // Custom name for the join table
     joinColumn: {
-      name: 'instagram_account_id', // Name of the column that references InstagramAccount
+      name: 'instagramAccountId', // Name of the column that references InstagramAccount
       referencedColumnName: 'id' // The column in InstagramAccount that this column refers to
     },
     inverseJoinColumn: {
-      name: 'interest_id', // Name of the column that references InstagramAccountInterests
+      name: 'interestId', // Name of the column that references InstagramAccountInterests
       referencedColumnName: 'id' // The column in InstagramAccountInterests that this column refers to
     }
   })  

@@ -23,9 +23,7 @@
     "migration:run": "npm run typeorm -- -d ./db/data-source.ts migration:run",
     "migration:create": "npm run typeorm -- -d ./db/data-source.ts migration:create db/migrations/createdMigration",
     "generate:graph": "madge --image graph.png --extensions ts src"
-
-  }
-  ,
+  },
   "dependencies": {
     "@nestjs/axios": "^3.0.1",
     "@nestjs/common": "^10.0.0",
@@ -41,6 +39,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "libphonenumber-js": "^1.10.54",
+    "ms": "^2.1.3",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",

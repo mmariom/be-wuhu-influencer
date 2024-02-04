@@ -12,6 +12,7 @@ import { InstagramAccountInterestsModule } from './instagram-account-interests/i
 import { CommonModule } from './common/common.module';
 import { InstagramProfileModule } from './instagram-profile/instagram-profile.module';
 import { InstagramOffersModule } from './instagram-offer/instagram-offers.module';
+import { RefreshTokenModule } from './refresh-token/refresh-token.module';
 
 // @Module({
   // imports: [ConfigModule.forRoot({isGlobal: true, envFilePath: '.env',}),TypeOrmModule.forRoot(dataSourceOptions), 
@@ -78,7 +79,8 @@ import { InstagramOffersModule } from './instagram-offer/instagram-offers.module
     InstagramAccountInterestsModule,
     InstagramOffersModule,
     CommonModule,
-    InstagramProfileModule
+    InstagramProfileModule,
+    RefreshTokenModule
   ],
   controllers: [AppController],
   providers: [],

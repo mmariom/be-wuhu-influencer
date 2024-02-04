@@ -121,12 +121,12 @@ export class InstagramAccountService {
                 if (!influencer) {
                     throw new Error('Influencer not found');
                 }
-    
+
                 const instagramAccount = await manager.findOne(InstagramAccount, { where: { influencer } });
                 if (!instagramAccount) {
                     throw new Error('Instagram account not found');
                 }
-    
+
                 // Update properties except 'interests'
                 const { interests, ...updateProps } = updateDto;
                 manager.merge(InstagramAccount, instagramAccount, updateProps);
@@ -134,18 +134,19 @@ export class InstagramAccountService {
     
                 // Handle 'interests' separately
                 const uniqueInterestIds = [...new Set(interests)];
-    
+
                 // Clear existing interests
                 await manager.createQueryBuilder()
                     .delete()
                     .from('ig_accounts_and_interests')
-                    .where('instagram_account_id = :id', { id: instagramAccount.id })
+                    .where('instagramAccountId = :id', { id: instagramAccount.id })
                     .execute();
     
                 // Set new interests using findBy method
                 const interestEntities = await manager.findBy(InstagramAccountInterests, {
                     id: In(uniqueInterestIds),
                 });
+
                 instagramAccount.interests = interestEntities;
                 await manager.save(instagramAccount);
             });
@@ -158,7 +159,6 @@ export class InstagramAccountService {
 
 
     async getInstagramAccountDetails(influencerId: string): Promise<InstagramAccountDetailsDto> {
-        console.log("lol"+influencerId);
         const account = await this.instagramAccountRepository.findOne({
           where: { influencer: {id: influencerId} },
           relations: ['interests']
