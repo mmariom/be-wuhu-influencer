@@ -142,59 +142,59 @@ export class AuthService {
     return null;
   }
 
-  // async login(influencer: Influencer) {
-  //   const payload = this.createTokenPayload(influencer);
-  //   return {
-  //     accessToken: this.jwtService.sign(payload, {
-  //       expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRATION', '15m'),
-  //     }),
-  //     refreshToken: this.jwtService.sign({ id: influencer.id }, {
-  //       expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRATION', '7d'),
-  //     }),
-  //   };
-  // }
-
-
   async login(influencer: Influencer) {
     const payload = this.createTokenPayload(influencer);
-    const accessToken = this.jwtService.sign(payload, {
-      expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRATION', '15m'),
-    });
-    const refreshToken = await this.generateAndSaveRefreshToken(influencer); // Updated to generate and save refresh token
-  
-    return { accessToken, refreshToken };
+    return {
+      accessToken: this.jwtService.sign(payload, {
+        expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRATION', '15m'),
+      }),
+      refreshToken: this.jwtService.sign({ id: influencer.id }, {
+        expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRATION', '7d'),
+      }),
+    };
   }
 
-  
 
-  // async refreshToken(influencer: Influencer) {
+  // async login(influencer: Influencer) {
   //   const payload = this.createTokenPayload(influencer);
-  //   return {
-  //     accessToken: this.jwtService.sign(payload, {
-  //       expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRATION', '15m'),
-  //     }),
-
-  //     refreshToken: this.jwtService.sign({ id: influencer.id }, {
-  //       expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRATION', '7d'),
-  //     }),
-  //   };
+  //   const accessToken = this.jwtService.sign(payload, {
+  //     expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRATION', '15m'),
+  //   });
+  //   const refreshToken = await this.generateAndSaveRefreshToken(influencer); // Updated to generate and save refresh token
+  
+  //   return { accessToken, refreshToken };
   // }
+
   
 
+  async refreshToken(influencer: Influencer) {
+    const payload = this.createTokenPayload(influencer);
+    return {
+      accessToken: this.jwtService.sign(payload, {
+        expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRATION', '15m'),
+      }),
 
-  async refreshToken(oldRefreshToken: string) {
-    // Validate the provided refresh token and get the associated influencer
-    const influencer = await this.validateRefreshToken(oldRefreshToken);
-  
-    // Assuming validation was successful and didn't throw, generate new tokens
-    const newAccessToken = this.jwtService.sign(this.createTokenPayload(influencer), {
-      expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRATION', '15m'),
-    });
-  
-    // Generate a new refresh token and save it in the database
-    const newRefreshToken = await this.generateAndSaveRefreshToken(influencer);
-    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+      refreshToken: this.jwtService.sign({ id: influencer.id }, {
+        expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRATION', '7d'),
+      }),
+    };
   }
+  
+
+
+  // async refreshToken(oldRefreshToken: string) {
+  //   // Validate the provided refresh token and get the associated influencer
+  //   const influencer = await this.validateRefreshToken(oldRefreshToken);
+  
+  //   // Assuming validation was successful and didn't throw, generate new tokens
+  //   const newAccessToken = this.jwtService.sign(this.createTokenPayload(influencer), {
+  //     expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRATION', '15m'),
+  //   });
+  
+  //   // Generate a new refresh token and save it in the database
+  //   const newRefreshToken = await this.generateAndSaveRefreshToken(influencer);
+  //   return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+  // }
   
 
   
@@ -211,43 +211,43 @@ export class AuthService {
 
   
 
+//win
+  // async generateAndSaveRefreshToken(influencer: Influencer) {
 
-  async generateAndSaveRefreshToken(influencer: Influencer) {
-
-    const existingUser = this.refreshTokenRepository.findOne({where: { influencer: { id: influencer.id }}});
+  //   const existingUser = this.refreshTokenRepository.findOne({where: { influencer: { id: influencer.id }}});
 
     
     
-    // Clean up any existing refresh tokens for the influencer
-      console.log("printed");
-    const deleteResult = await this.refreshTokenRepository.delete({ influencer: { id: influencer.id } });
+  //   // Clean up any existing refresh tokens for the influencer
+  //     console.log("printed");
+  //   const deleteResult = await this.refreshTokenRepository.delete({ influencer: { id: influencer.id } });
 
-    console.log(`Deleted ${deleteResult.affected} tokens`);
+  //   console.log(`Deleted ${deleteResult.affected} tokens`);
 
-    // await this.refreshTokenRepository.delete({ influencer: influencer });
+  //   // await this.refreshTokenRepository.delete({ influencer: influencer });
   
-    const refreshTokenPayload = { id: influencer.id };
-    const expiresIn = this.configService.get<string>('REFRESH_TOKEN_EXPIRATION', '7d');
+  //   const refreshTokenPayload = { id: influencer.id };
+  //   const expiresIn = this.configService.get<string>('REFRESH_TOKEN_EXPIRATION', '7d');
   
-    // Generate the refresh token
-    const refreshToken = this.jwtService.sign(refreshTokenPayload, {
-      secret: this.configService.get('REFRESH_JWT_SECRET'),
-      expiresIn,
-    });
+  //   // Generate the refresh token
+  //   const refreshToken = this.jwtService.sign(refreshTokenPayload, {
+  //     secret: this.configService.get('REFRESH_JWT_SECRET'),
+  //     expiresIn,
+  //   });
   
-    // Use ms to calculate the expiresAt time based on expiresIn
-    const expiresAt = new Date(Date.now() + ms(expiresIn));
+  //   // Use ms to calculate the expiresAt time based on expiresIn
+  //   const expiresAt = new Date(Date.now() + ms(expiresIn));
   
-    // Create and save the refresh token entity
-    const refreshTokenEntity = new RefreshToken();
-    refreshTokenEntity.token = refreshToken;
-    refreshTokenEntity.influencer = influencer;
-    refreshTokenEntity.expiresAt = expiresAt;
+  //   // Create and save the refresh token entity
+  //   const refreshTokenEntity = new RefreshToken();
+  //   refreshTokenEntity.token = refreshToken;
+  //   refreshTokenEntity.influencer = influencer;
+  //   refreshTokenEntity.expiresAt = expiresAt;
     
-    await this.refreshTokenRepository.save(refreshTokenEntity);
+  //   await this.refreshTokenRepository.save(refreshTokenEntity);
   
-    return refreshToken;
-  }
+  //   return refreshToken;
+  // }
 
   
   // async XXXgenerateAndSaveRefreshToken(influencer: Influencer): Promise<string> {

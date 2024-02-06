@@ -28,21 +28,23 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RefreshToken } from 'src/refresh-token/entities/refreshtoken.entity';
 import { Repository } from 'typeorm';
 
-// @Injectable()
-// export class RefreshJwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
-//   constructor(private configService: ConfigService) {
-//     super({
-//       jwtFromRequest: ExtractJwt.fromBodyField('refresh'),
-//       ignoreExpiration: false,
-//       secretOrKey: configService.get<string>('REFRESH_JWT_SECRET'), // Separate secret for refresh token
-//     });
-//   }
+// // @Injectable()
+// // export class RefreshJwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
+// //   constructor(private configService: ConfigService) {
+// //     super({
+// //       jwtFromRequest: ExtractJwt.fromBodyField('refresh'),
+// //       ignoreExpiration: false,
+// //       secretOrKey: configService.get<string>('REFRESH_JWT_SECRET'), // Separate secret for refresh token
+// //     });
+// //   }
 
-//   async validate(payload: any) {
-//     return { userId: payload.sub, username: payload.username };
-//   }
-// }
+// //   async validate(payload: any) {
+// //     return { userId: payload.sub, username: payload.username };
+// //   }
+// // }
 
+
+// // send back refersh and acces token in body 
 
 // @Injectable()
 // export class RefreshJwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
@@ -67,27 +69,64 @@ import { Repository } from 'typeorm';
 // }
 
 
+import { Request } from 'express';
+
+
+// Function to extract JWT from cookie
+const cookieExtractor = (req: Request): string | null => {
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies['refreshToken']; // Use the name of your refresh token cookie
+  }
+  return token;
+};
+
 @Injectable()
 export class RefreshJwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor(
-    private readonly configService: ConfigService,
-    @InjectRepository(RefreshToken)
-    private readonly refreshTokenRepository: Repository<RefreshToken>,
+    private configService: ConfigService,
+    private influencerService: InfluencerService,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: configService.get('REFRESH_JWT_SECRET'),
-      passReqToCallback: true, // Allows the request to be passed to the validate method
+      jwtFromRequest: cookieExtractor, // Use cookie extractor
+      ignoreExpiration: false,
+      secretOrKey: configService.get<string>('REFRESH_JWT_SECRET'),
     });
   }
 
-  async validate(req, payload: any) {
-    const refreshToken = req.headers['authorization']?.split(' ')[1];
-    // Optionally, validate the refresh token against the database here
-    const tokenRecord = await this.refreshTokenRepository.findOne({where: {token: refreshToken}});
-    if (!tokenRecord || new Date() > tokenRecord.expiresAt) {
-      throw new UnauthorizedException('Refresh token is invalid or expired.');
+  async validate(payload: any) {
+
+    const influencer = await this.influencerService.findOneById(payload.id);
+    if (!influencer) {
+      throw new UnauthorizedException();
     }
-    return { ...payload, refreshToken }; // Ensure payload includes necessary user identification
+    // console.log(influencer, "full influencer entity");
+    return influencer; // Return the full influencer entity
   }
 }
+
+
+// @Injectable()
+// export class RefreshJwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
+//   constructor(
+//     private readonly configService: ConfigService,
+//     @InjectRepository(RefreshToken)
+//     private readonly refreshTokenRepository: Repository<RefreshToken>,
+//   ) {
+//     super({
+//       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+//       secretOrKey: configService.get('REFRESH_JWT_SECRET'),
+//       passReqToCallback: true, // Allows the request to be passed to the validate method
+//     });
+//   }
+
+//   async validate(req, payload: any) {
+//     const refreshToken = req.headers['authorization']?.split(' ')[1];
+//     // Optionally, validate the refresh token against the database here
+//     const tokenRecord = await this.refreshTokenRepository.findOne({where: {token: refreshToken}});
+//     if (!tokenRecord || new Date() > tokenRecord.expiresAt) {
+//       throw new UnauthorizedException('Refresh token is invalid or expired.');
+//     }
+//     return { ...payload, refreshToken }; // Ensure payload includes necessary user identification
+//   }
+// }
