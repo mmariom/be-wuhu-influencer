@@ -115,11 +115,10 @@ import { JwtService } from '@nestjs/jwt';
 import { Influencer } from 'src/influencer/entities/influencer.entity';
 import { InfluencerService } from 'src/influencer/influencer.service';
 import { ConfigService } from '@nestjs/config';
-import { RefreshToken } from 'src/refresh-token/entities/refreshtoken.entity';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository, Transaction } from 'typeorm';
 
-import * as ms from 'ms';
+
 
 
 @Injectable()
@@ -128,7 +127,6 @@ export class AuthService {
     private readonly influencerService: InfluencerService,
     private jwtService: JwtService,
     private configService: ConfigService,
-    @InjectRepository(RefreshToken) private readonly refreshTokenRepository: Repository<RefreshToken>,  // added for refresh token
     @InjectEntityManager() private entityManager: EntityManager,
 
   ) {}
@@ -288,36 +286,36 @@ export class AuthService {
   // }
   
 
-  async validateRefreshToken(token: string): Promise<Influencer> {
-    const refreshToken = await this.refreshTokenRepository.findOne({
-      where: { token },
-      relations: ['influencer'],
-    });
+  // async validateRefreshToken(token: string): Promise<Influencer> {
+  //   const refreshToken = await this.refreshTokenRepository.findOne({
+  //     where: { token },
+  //     relations: ['influencer'],
+  //   });
 
-    console.log(`Token Expires At: ${refreshToken.expiresAt}, Current Time: ${new Date()}`);
+  //   console.log(`Token Expires At: ${refreshToken.expiresAt}, Current Time: ${new Date()}`);
 
   
-    if (!refreshToken) {
-      throw new UnauthorizedException('Refresh token does not exist.');
-    }
+  //   if (!refreshToken) {
+  //     throw new UnauthorizedException('Refresh token does not exist.');
+  //   }
   
-    if (new Date() > refreshToken.expiresAt) {
-      throw new UnauthorizedException('Refresh token is expired.');
-    }
+  //   if (new Date() > refreshToken.expiresAt) {
+  //     throw new UnauthorizedException('Refresh token is expired.');
+  //   }
   
-    return refreshToken.influencer;
-  }
+  //   return refreshToken.influencer;
+  // }
 
 
-  async logout(influencerId: string) {
-  // Assuming each influencer has a single valid refresh token at any time
-  // This will delete the refresh token from the database, effectively logging the user out
-  const result = await this.refreshTokenRepository.delete({ influencer: { id: influencerId } });
-  if (result.affected === 0) {
-    throw new UnauthorizedException('Logout failed, token not found.');
-  }
-  return { message: 'You have been logged out.' };
-}
+//   async logout(influencerId: string) {
+//   // Assuming each influencer has a single valid refresh token at any time
+//   // This will delete the refresh token from the database, effectively logging the user out
+//   const result = await this.refreshTokenRepository.delete({ influencer: { id: influencerId } });
+//   if (result.affected === 0) {
+//     throw new UnauthorizedException('Logout failed, token not found.');
+//   }
+//   return { message: 'You have been logged out.' };
+// }
 
 
 

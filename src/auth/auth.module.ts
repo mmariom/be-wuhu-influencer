@@ -11,7 +11,6 @@ import { InfluencerService } from 'src/influencer/influencer.service';
 import { InfluencerModule } from 'src/influencer/influencer.module';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RefreshTokenModule } from 'src/refresh-token/refresh-token.module';
 
 @Module({
   providers: [
@@ -30,7 +29,7 @@ import { RefreshTokenModule } from 'src/refresh-token/refresh-token.module';
       }),
       inject: [ConfigService], // Inject ConfigService
     }), 
-    InfluencerModule,RefreshTokenModule
+    InfluencerModule
   ],
 })
 export class AuthModule {}

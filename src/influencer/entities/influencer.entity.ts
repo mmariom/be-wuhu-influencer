@@ -15,7 +15,6 @@ import { InfluencerCompany } from 'src/influencer-company/entities/influencer-co
 import { IsPhoneNumber } from 'class-validator';
 import { InstagramAccount } from 'src/instagram-account/entities/instagram-account.entity';
 import { InfluencerAddress } from 'src/influencer-address/entities/influencer-address.entity';
-import { RefreshToken } from '../../refresh-token/entities/refreshtoken.entity';
 
 
   @Entity()
@@ -55,8 +54,6 @@ import { RefreshToken } from '../../refresh-token/entities/refreshtoken.entity';
 
 
 
-    @OneToOne(() => RefreshToken, refreshToken => refreshToken.influencer)
-    refreshToken: RefreshToken;
 
 
     // @OneToMany(() => InstagramAccount, instagramAccount => instagramAccount.influencer)

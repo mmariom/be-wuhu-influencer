@@ -25,7 +25,6 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { InfluencerService } from 'src/influencer/influencer.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RefreshToken } from 'src/refresh-token/entities/refreshtoken.entity';
 import { Repository } from 'typeorm';
 
 // // @Injectable()

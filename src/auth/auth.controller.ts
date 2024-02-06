@@ -153,15 +153,15 @@ async refreshToken(@Request() req) {
 
 
 
-  @UseGuards(JwtGuard)
-  @Post('logout')
-  async logout(@Request() req) {
-    // Extract user or token information from req.user
-    await this.authService.logout(req.user.id);
+  // @UseGuards(JwtGuard)
+  // @Post('logout')
+  // async logout(@Request() req) {
+  //   // Extract user or token information from req.user
+  //   await this.authService.logout(req.user.id);
 
-    // Additional steps to clear tokens or manage session state
-    return { message: 'Logged out successfully' };
-  }
+  //   // Additional steps to clear tokens or manage session state
+  //   return { message: 'Logged out successfully' };
+  // }
 
 
 

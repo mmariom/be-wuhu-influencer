@@ -9,8 +9,6 @@ import { InfluencerCompanyModule } from 'src/influencer-company/influencer-compa
 import { InfluencerAddressModule } from 'src/influencer-address/influencer-address.module';
 import { InfluencerCompany } from 'src/influencer-company/entities/influencer-company.entity';
 import { InfluencerAddress } from 'src/influencer-address/entities/influencer-address.entity';
-import { RefreshToken } from '../refresh-token/entities/refreshtoken.entity';
-import { RefreshTokenModule } from 'src/refresh-token/refresh-token.module';
 
 // @Module({
 //   imports: [TypeOrmModule.forFeature([Influencer,InfluencerCompany,InfluencerAddress]),HttpModule,ConfigModule,InfluencerCompanyModule,InfluencerAddressModule],
